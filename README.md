@@ -8,7 +8,7 @@ Swagger UI will be located at http://localhost:5000/ui
 #### architecture
 <object data='https://pastebin.com/raw/dgVVKx0b' type='image/svg'></object>
 
-![architecture](structure.svg)
+![architecture](architecture.svg)
 
 As "web" servers are stateless, they can be scaled indefinitely. System will be as consistent, as PosrgreSQL cluster. 
 
