@@ -1,0 +1,12 @@
+version: '3'
+services:
+  test:
+    image: python:3.7-alpine
+    depends_on:
+      - db
+      - web
+    entrypoint:
+      - python3
+      - /root/test.py
+    volumes:
+      - ./test/test.py:/root/test.py
