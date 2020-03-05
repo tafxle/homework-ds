@@ -8,11 +8,8 @@ services:
       - 80
     depends_on:
       - db
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost//api/v1/ping"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
+    environment:
+      DATABASE_URI: "postgresql://postgres:tXfr4AVPzPhNTRVg@db:5432"
 
   db:
     image: postgres

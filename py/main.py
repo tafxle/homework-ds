@@ -1,6 +1,10 @@
 # !/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 import logging
+import os
+import socket
+import time
+import urllib.parse
 
 from flask import Flask
 from flask_restplus import Api, Resource, fields, reqparse, abort
@@ -13,7 +17,7 @@ api = Api(app, doc='/ui', version='1.0', title='Some store API', default="api")
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['RESTPLUS_MASK_SWAGGER'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:tXfr4AVPzPhNTRVg@db:5432'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
 
 db = SQLAlchemy(app)
 
@@ -141,5 +145,12 @@ class ListCategories(Resource):
 
 
 if __name__ == '__main__':
+    addr = urllib.parse.urlparse(app.config['SQLALCHEMY_DATABASE_URI'])
+    for i in range(10): # wait 5s
+        try:
+            with socket.create_connection((addr.host, addr.port), timeout=1):
+                break
+        except OSError as ex:
+            time.sleep(0.5)
     db.create_all(app=app)
     serve(app, host="0.0.0.0", port=80, threads=16)
