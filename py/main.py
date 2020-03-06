@@ -143,6 +143,22 @@ class ListCategories(Resource):
         """Health check."""
         return "pong"
 
+# TO DELETE
+
+deleteProdParser = reqparse.RequestParser()
+deleteProdParser.add_argument("login")
+deleteProdParser.add_argument("password")
+
+@app.route(ROOT + '/delete_prod')
+class ListCategories(Resource):
+    def get(self):
+        """Clears production database"""
+        args = deleteProdParser.parse_args()
+        if args.get("login", "") == "root" and args.get("password", "") == "pass":
+            db.drop_all()
+            return 202
+        return 401
+
 
 if __name__ == '__main__':
     addr = urllib.parse.urlparse(app.config['SQLALCHEMY_DATABASE_URI'])
