@@ -5,6 +5,7 @@ import os
 import socket
 import time
 import urllib.parse
+from urllib.error import URLError
 
 from flask import Flask
 from flask_restplus import Api, Resource, fields, reqparse, abort
@@ -164,9 +165,9 @@ if __name__ == '__main__':
     addr = urllib.parse.urlparse(app.config['SQLALCHEMY_DATABASE_URI'])
     for i in range(10): # wait 5s
         try:
-            with socket.create_connection((addr.host, addr.port), timeout=1):
+            with socket.create_connection((addr.hostname, addr.port), timeout=1):
                 break
-        except OSError as ex:
+        except URLError as ex:
             time.sleep(0.5)
     db.create_all(app=app)
     serve(app, host="0.0.0.0", port=80, threads=16)
