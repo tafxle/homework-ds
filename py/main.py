@@ -2,10 +2,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
-import socket
 import time
-import urllib.parse
-from urllib.error import URLError
 
 from flask import Flask
 from flask_restplus import Api, Resource, fields, reqparse, abort
@@ -167,12 +164,12 @@ class ListCategories(Resource):
 
 
 if __name__ == '__main__':
-    addr = urllib.parse.urlparse(app.config['SQLALCHEMY_DATABASE_URI'])
-    for i in range(10): # wait 5s
+    start = time.time()
+    while True:
         try:
-            with socket.create_connection((addr.hostname, addr.port), timeout=1):
-                break
-        except URLError as ex:
-            time.sleep(0.5)
-    db.create_all(app=app)
+            db.create_all(app=app)
+            break
+        except Exception as e:
+            if time.time() - start > 10:
+                raise Exception("DB is not avaliable for 10s. Aborting.")
     serve(app, host="0.0.0.0", port=80, threads=16)
