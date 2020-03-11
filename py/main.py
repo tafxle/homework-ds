@@ -118,6 +118,7 @@ class ProductEntry(Resource):
 class ListCategories(Resource):
 
     @api.expect(paginationParser, queryParser)
+    @api.header('X-Total', 'Total count of entries matching filters', type=[int])
     @api.marshal_list_with(model)
     def get(self):
         """Discover products."""
@@ -131,11 +132,15 @@ class ListCategories(Resource):
         if pagination.get('page') is not None:
             if pagination['page'] < 1 or pagination['per_page'] < 1:
                 abort(400, "Wrong pagination params")
-            data = query.paginate(pagination['page'], pagination['per_page']).items
+            p = query.paginate(pagination['page'], pagination['per_page'])
+            total = p.total
+            data = p.items
+            log.info("Requested list " + str(searchArgs) + ", " + str(pagination) + " %d of %d items returned" % (len(data), total))
+            return data, 200, {'X-Total': total}
         else:
             data = query.all()
-        log.info("Requested list " + str(searchArgs) + ", %d items returned" % len(data))
-        return data
+            log.info("Requested list " + str(searchArgs) + ", %d items returned" % len(data))
+            return data
 
 
 @api.route(ROOT + '/ping')

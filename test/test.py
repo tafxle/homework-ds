@@ -61,6 +61,7 @@ req = urllib.request.urlopen(API_ROOT + "products/list?category=toys")
 assert json.load(req) == products[:1]
 
 req = urllib.request.urlopen(API_ROOT + "products/list?page=2&per_page=1")
+assert req.getheader('X-Total') == "2"
 assert json.load(req) == products[1:]
 
 req = urllib.request.Request(API_ROOT + "product/" + str(products[1]['id']), method='DELETE')
