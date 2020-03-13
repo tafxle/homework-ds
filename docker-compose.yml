@@ -1,0 +1,19 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - '5000:80'
+    expose:
+      - 80
+    depends_on:
+      - db
+    environment:
+      DATABASE_URI: "postgresql://postgres:tXfr4AVPzPhNTRVg@db:5432"
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: tXfr4AVPzPhNTRVg
+    expose:
+      - 5432

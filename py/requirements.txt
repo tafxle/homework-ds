@@ -1,0 +1,7 @@
+werkzeug==0.16.1
+flask
+flask_restplus
+flask_sqlalchemy
+sqlalchemy
+psycopg2-binary
+waitress
